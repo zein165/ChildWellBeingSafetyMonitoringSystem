@@ -162,7 +162,7 @@ Proyek ini dikembangkan sebagai Project-Based Learning pada mata kuliah Pengemba
     /location
     /rules
 
-/shared
+/shared (Tidak boleh ada function/method disini)
   /models
   /enums
   /dto
