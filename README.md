@@ -162,12 +162,6 @@ Proyek ini dikembangkan sebagai Project-Based Learning pada mata kuliah Pengemba
     /location
     /rules
 
-/dashboard
-  /src
-    /pages
-    /components
-    /charts
-
 /shared
   /models
   /enums
