@@ -1,0 +1,4 @@
+export enum RuleType {
+    GAME_TIME_LIMIT = 'GAME_TIME_LIMIT',
+    SCREEN_TIME_LIMIT = 'SCREEN_TIME_LIMIT',
+}

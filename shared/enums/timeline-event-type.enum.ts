@@ -1,0 +1,7 @@
+export enum TimelineEventType {
+    USAGE = 'USAGE',
+    APP_INSTALL = 'APP_INSTALL',
+    APP_REMOVE = 'APP_REMOVE',
+    LOCATION = 'LOCATION',
+    RULE_TRIGGERED = 'RULE_TRIGGERED'
+}
