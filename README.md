@@ -1,5 +1,6 @@
-ChildWellBeingSafetyMonitoringSystem
-📌 Overview
+# ChildWellBeingSafetyMonitoringSystem
+
+## 📌 Overview
 
 ChildWellBeingSafetyMonitoringSystem (CWSMS) adalah aplikasi mobile berbasis monitoring dan awareness yang dirancang untuk membantu orang tua memahami pola aktivitas digital dan fisik anak, dengan tujuan meningkatkan kesejahteraan, keamanan, dan kebiasaan hidup sehat anak.
 
@@ -7,74 +8,51 @@ Aplikasi ini tidak melakukan penyadapan konten, tidak membaca pesan pribadi, dan
 
 Proyek ini dikembangkan sebagai Project-Based Learning pada mata kuliah Pengembangan Aplikasi Mobile.
 
-🎯 Objectives
+## 🎯 Objectives
 
-Aplikasi ini bertujuan untuk:
+### Aplikasi ini bertujuan untuk:
+- Menyediakan monitoring durasi penggunaan aplikasi
+- Menghitung lama bermain game
+- Menampilkan aplikasi apa saja yang terinstal
+- Menyajikan riwayat aktivitas aplikasi
+- Menyediakan informasi lokasi dan histori aktivitas di luar rumah
+- Menghasilkan timeline aktivitas harian anak
+- Memberikan alert berbasis aturan sederhana
+- Mendukung peran Orang Tua dan Anak secara terpisah
 
-Menyediakan monitoring durasi penggunaan aplikasi
+## 🧠 System Scope & Philosophy
+### ✅ What This App Is
 
-Menghitung lama bermain game
+- Activity awareness system
+- Monitoring berbasis metadata
+- Educational & preventive tool
+- Transparent & ethical monitoring
 
-Menampilkan aplikasi apa saja yang terinstal
+### ❌ What This App Is NOT
+- Bukan parental control OS-level
+- Tidak memblokir aplikasi
+- Tidak membaca isi chat, media, atau website
+- Tidak menggunakan Accessibility Service
+- Tidak menggunakan custom native module
 
-Menyajikan riwayat aktivitas aplikasi
+## 👥 User Roles
+### 👨‍👩‍👧 Parent (Orang Tua)
+- Melihat laporan aktivitas anak
+- Melihat durasi screen time & game time
+- Melihat histori lokasi & aktivitas luar
+- Mengatur aturan (rule) & threshold
+- Menerima notifikasi peringatan
 
-Menyediakan informasi lokasi dan histori aktivitas di luar rumah
+### 🧒 Child (Anak)
+- Perangkat dimonitor secara transparan
+- Tidak memiliki akses ke dashboard orang tua
+- Aplikasi berjalan sebagai monitoring agent
 
-Menghasilkan timeline aktivitas harian anak
+> Role ditentukan dan divalidasi di backend (server-side)
+> Mobile app hanya merender UI berdasarkan role yang diberikan server.
 
-Memberikan alert berbasis aturan sederhana
-
-Mendukung peran Orang Tua dan Anak secara terpisah
-
-🧠 System Scope & Philosophy
-What This App Is
-
-Activity awareness system
-
-Monitoring berbasis metadata
-
-Educational & preventive tool
-
-Transparent & ethical monitoring
-
-What This App Is NOT
-
-Bukan parental control OS-level
-
-Tidak memblokir aplikasi
-
-Tidak membaca isi chat, media, atau website
-
-Tidak menggunakan Accessibility Service
-
-Tidak menggunakan custom native module
-
-👥 User Roles
-👨‍👩‍👧 Parent (Orang Tua)
-
-Melihat laporan aktivitas anak
-
-Melihat durasi screen time & game time
-
-Melihat histori lokasi & aktivitas luar
-
-Mengatur aturan (rule) & threshold
-
-Menerima notifikasi peringatan
-
-🧒 Child (Anak)
-
-Perangkat dimonitor secara transparan
-
-Tidak memiliki akses ke dashboard orang tua
-
-Aplikasi berjalan sebagai monitoring agent
-
-Role ditentukan dan divalidasi di backend (server-side)
-Mobile app hanya merender UI berdasarkan role yang diberikan server.
-
-🧱 High-Level Architecture
+## 🧱 High-Level Architecture
+```
 [ Child Mobile App (RN + TS) ]
   - Activity Tracking
   - Location Logging
@@ -93,125 +71,86 @@ Mobile app hanya merender UI berdasarkan role yang diberikan server.
   - Reports
   - Timeline
   - Alerts
+```
 
-📱 Core Features
-Digital Activity Monitoring
+## 📱 Core Features
 
-Screen time (estimasi)
+### 1️⃣ Digital Activity Monitoring
+- Screen time (estimasi)
+- Per-application usage duration
+- Game vs non-game classification
+- Daily usage summary
 
-Per-application usage duration
+### 2️⃣ App Inventory Monitoring
+- Daftar aplikasi terinstal
+- Deteksi aplikasi baru / dihapus (polling-based)
+- Kategori aplikasi
 
-Game vs non-game classification
+### 3️⃣ Location & Outside Activity
+- GPS-based location tracking
+- Location history
+- Outside vs in-home detection (geofence-based)
+- Outside duration per day
 
-Daily usage summary
+### 4️⃣ Timeline & Reporting
+- Unified activity timeline
+- Daily & weekly summaries
+- Event-based activity history
 
-App Inventory Monitoring
+### 5️⃣ Rule & Alert System
+- Threshold-based rules (contoh: game time > 2 jam)
+- Local notification
+- Alert history
 
-Daftar aplikasi terinstal
+## 🔐 Privacy & Ethics
+- Metadata only (no content inspection)
+- No chat, media, or website content access
+- Explicit role separation
+- Designed for transparency & trust
+- Play Store–compliant approach
 
-Deteksi aplikasi baru / dihapus (polling-based)
+## 🛠 Technology Stack
+### Language
+- TypeScript (end-to-end)
 
-Kategori aplikasi
+### 📱 Mobile Application
+- React Native
+- TypeScript
+- Existing libraries only
+- No custom native modules
 
-Location & Outside Activity
+### Key Libraries (indicative):
+- `react-native-device-info`
+- `@react-native-community/hooks`
+- `react-native-geolocation-service`
+- `react-native-maps`
+- AsyncStorage / Realm
+- Local notification library
 
-GPS-based location tracking
+### 💻 Backend
+- NestJS
+- TypeScript
+- REST API
+- JWT-based authentication
+- Role-Based Access Control (RBAC)
 
-Location history
+## 📊 Parent Dashboard
+- React
+- TypeScript
+- Charting & map visualization
+- REST API integration
 
-Outside vs in-home detection (geofence-based)
+## 🖥 Data Storage
+- Mobile: Local storage (AsyncStorage / Realm)
+- Backend: Relational DB (PostgreSQL / SQLite)
 
-Outside duration per day
-
-Timeline & Reporting
-
-Unified activity timeline
-
-Daily & weekly summaries
-
-Event-based activity history
-
-Rule & Alert System
-
-Threshold-based rules (contoh: game time > 2 jam)
-
-Local notification
-
-Alert history
-
-🔐 Privacy & Ethics
-
-Metadata only (no content inspection)
-
-No chat, media, or website content access
-
-Explicit role separation
-
-Designed for transparency & trust
-
-Play Store–compliant approach
-
-🛠 Technology Stack
-Language
-
-TypeScript (end-to-end)
-
-Mobile Application
-
-React Native
-
-TypeScript
-
-Existing libraries only
-
-No custom native modules
-
-Key Libraries (indicative):
-
-react-native-device-info
-
-@react-native-community/hooks
-
-react-native-geolocation-service
-
-react-native-maps
-
-AsyncStorage / Realm
-
-Local notification library
-
-Backend
-
-NestJS
-
-TypeScript
-
-REST API
-
-JWT-based authentication
-
-Role-Based Access Control (RBAC)
-
-Parent Dashboard
-
-React
-
-TypeScript
-
-Charting & map visualization
-
-REST API integration
-
-Data Storage
-
-Mobile: Local storage (AsyncStorage / Realm)
-
-Backend: Relational DB (PostgreSQL / SQLite)
-
-📦 Project Structure (Conceptual)
+## 📦 Project Structure (Conceptual)
+```
 /mobile-app
   /src
     /features
+      /screen-time
+      /....
     /storage
     /rules
     /timeline
@@ -225,58 +164,29 @@ Backend: Relational DB (PostgreSQL / SQLite)
     /location
     /rules
 
-/dashboard
-  /src
-    /pages
-    /components
-    /charts
-
-/shared
+/shared (Tidak boleh ada function disini, kecuali static function diperbolehkan)
   /models
   /enums
   /dto
+```
 
-🎓 Academic Context
-
+## 🎓 Academic Context
 This project is designed to help students learn:
+- Mobile application architecture
+- Client–server separation
+- Role-based access control
+- Data modeling & aggregation
+- Ethical system design
+- Real-world constraints in mobile monitoring
 
-Mobile application architecture
+## 🚀 Future Extensions (Optional)
+- Behavior anomaly detection
+- Sleep pattern inference
+- Multi-device child profile
+- Advanced analytics
+- Research-oriented extensions (TA / Skripsi)
 
-Client–server separation
-
-Role-based access control
-
-Data modeling & aggregation
-
-Ethical system design
-
-Real-world constraints in mobile monitoring
-
-🚀 Future Extensions (Optional)
-
-Behavior anomaly detection
-
-Sleep pattern inference
-
-Multi-device child profile
-
-Advanced analytics
-
-Research-oriented extensions (TA / Skripsi)
-
-📄 License & Usage
+## 📄 License & Usage
 
 This project is intended for educational and academic use.
 Any real-world deployment must comply with applicable privacy and child protection regulations.
-
-Kalau Anda mau, saya bisa lanjutkan:
-
-README versi ringkas untuk mahasiswa
-
-README versi proposal hibah / akreditasi
-
-Diagram arsitektur visual
-
-README backend & mobile terpisah
-
-Tinggal bilang arah berikutnya.
