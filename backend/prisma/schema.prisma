@@ -6,27 +6,10 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
+  moduleFormat  = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
-}
-
-enum Role {
-  PARENT
-  CHILD
-}
-
-model User {
-  id String @id @default(uuid())
-  email? String? @unique
-  password String?
-  role Role
-
-  parentId String?
-  parent User? @relation("ParentChildren", fields: [parentId], references: [id])
-  child User[] @relation("ParentChildren")
-
-  createdAt Datetime @default(now())
 }
