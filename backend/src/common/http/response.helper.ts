@@ -7,11 +7,15 @@ export class ApiResponse {
         };
     }
 
-    static error(message: string, errors: string[] | string) {
+    static error(message: string, errors?: string[] | string | null) {
         return {
             success: false,
-            errors: Array.isArray(errors) ? errors : [errors],
-            message
+            errors: errors
+                ? Array.isArray(errors)
+                    ? errors
+                    : [errors]
+                : [],
+            message,
         };
     }
 
