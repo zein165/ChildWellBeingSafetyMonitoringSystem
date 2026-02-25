@@ -1,5 +1,14 @@
-import { AppError } from "src/common/errors/app.error";
-import { v4 as uuidv4 } from "uuid";
+import { DomainError } from 'src/common/errors/domain.error';
+import { UserErrorCode } from './user-error-code.enum';
+
+export interface UserPersistence {
+    id: string;
+    username: string;
+    password: string;
+    role: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 export enum UserRole {
     PARENT = 'PARENT',
@@ -7,7 +16,7 @@ export enum UserRole {
 }
 
 export class User {
-    private constructor (
+    private constructor(
         private readonly id: string,
         private readonly username: string,
         private readonly password: string,
@@ -17,45 +26,47 @@ export class User {
     ) {}
 
     static createParent(
-        username: string, 
-        passwordHash: string, 
+        id: string,
+        username: string,
+        passwordHash: string,
     ): User {
-        if (username.length < 3) throw new AppError('Username must not be less than 3 characters', 400);
-
-        return new User(
-            uuidv4(),
-            username,
-            passwordHash,
-            UserRole.PARENT
-        )
+        this.validateUsername(username);
+        return new User(id, username, passwordHash, UserRole.PARENT);
     }
 
-    static fromPersistence(
-        raw: any
-    ): User {
+    static fromPersistence(raw: UserPersistence): User {
         return new User(
             raw.id,
             raw.username,
             raw.password,
             raw.role as UserRole,
             raw.createdAt,
-            raw.updatedAt
+            raw.updatedAt,
         );
     }
 
-    get getId(){
-        return this.id
+    private static validateUsername(username: string): void {
+        if(!username || username.length < 3) {
+            throw new DomainError(
+                UserErrorCode.INVALID_USERNAME,
+                'Username must be at least 3 characters',
+            );
+        }
     }
 
-    get getUsername(): string {
+    getId(): string {
+        return this.id;
+    }
+
+    getUsername(): string {
         return this.username;
     }
 
-    get getPassword(): string {
+    getHashedPassword(): string {
         return this.password;
     }
 
-    get getRole(): string {
+    getRole(): UserRole {
         return this.role;
     }
 }
