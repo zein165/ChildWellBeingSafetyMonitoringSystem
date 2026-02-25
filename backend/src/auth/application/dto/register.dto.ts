@@ -1,16 +1,23 @@
-import { IsEnum, IsString, MinLength, MaxLength } from 'class-validator';
-import { UserRole } from 'src/auth/domain/user.entity';
+import { User, UserRole } from 'src/auth/domain/user.entity';
 
-export class RegisterDto {
-    @IsString()
-    @MinLength(3)
-    @MaxLength(20)
+export class RegisterParentInput {
     username: string;
-
-    @IsString()
-    @MinLength(8)
     password: string;
-
-    @IsEnum(UserRole)
     role: UserRole;
+}
+
+export class RegisterUserOutput {
+    id: string;
+    username: string;
+    role: UserRole;
+
+    private constructor(id: string, username: string, role: UserRole) {
+        this.id = id;
+        this.username = username;
+        this.role = role;
+    }
+
+    static create(user: User): RegisterUserOutput {
+        return new RegisterUserOutput(user.getId(), user.getUsername(), user.getRole());
+    }
 }

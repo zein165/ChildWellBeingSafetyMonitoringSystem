@@ -1,11 +1,34 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import {UserRole} from "../../domain/user.entity";
 
-export class LoginDto {
-    @IsString()
-    @IsNotEmpty({ message: 'Username tidak boleh kosong' })
+export class LoginInput {
     username: string;
-
-    @IsString()
-    @IsNotEmpty({ message: 'Password tidak boleh kosong' })
     password: string;
+}
+
+export class LoginOutput {
+    accessToken: string;
+    refreshToken: string;
+    user: {
+        id: string;
+        username: string;
+        role: UserRole;
+    };
+
+    private constructor(
+        accessToken: string,
+        refreshToken: string,
+        user: { id: string; username: string; role: UserRole },
+    ) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.user = user;
+    }
+
+    static create(
+        accessToken: string,
+        refreshToken: string,
+        user: { id: string; username: string; role: UserRole },
+    ): LoginOutput {
+        return new LoginOutput(accessToken, refreshToken, user);
+    }
 }
