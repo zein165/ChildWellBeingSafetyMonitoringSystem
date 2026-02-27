@@ -1,11 +1,11 @@
 import { JwtModule } from "@nestjs/jwt";
-import { AuthUsecase } from "../application/auth.usecase";
-import { AuthHandler } from "./http/auth.handler";
-import { PrismaUserRepository } from "./persistence/prisma-user.repository";
+import { AuthUsecase } from "./application/auth.usecase";
+import { AuthHandler } from "./infrastructure/http/auth.handler";
+import { PrismaUserRepository } from "./infrastructure/persistence/prisma-user.repository";
 import { Module } from "@nestjs/common";
-import { UuidIdGenerator } from './security/uuid-id.generator';
-import { JwtTokenService } from './security/jwt-token-service';
-import { BcryptPasswordHasher } from './security/bcrypt-password.hasher';
+import { UuidIdGenerator } from '../common/infrastructure/security/uuid-id.generator';
+import { JwtTokenService } from './infrastructure/security/jwt-token-service';
+import { BcryptPasswordHasher } from './infrastructure/security/bcrypt-password.hasher';
 import { ConfigService } from '@nestjs/config';
 
 @Module({

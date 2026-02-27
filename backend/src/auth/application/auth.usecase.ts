@@ -7,7 +7,7 @@ import type { UserRepository } from "../domain/user.repository";
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { RegisterParentInput, RegisterUserOutput } from './dto/register.dto';
 
-import type { IdGenerator } from './id-generator.interface';
+import type { IdGenerator } from '../../common/interfaces/id-generator.interface';
 import type { TokenService } from './token-service.interface';
 import type { PasswordHasher } from './password-hasher.interface';
 

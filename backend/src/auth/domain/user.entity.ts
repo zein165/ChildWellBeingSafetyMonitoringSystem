@@ -69,4 +69,8 @@ export class User {
     getRole(): UserRole {
         return this.role;
     }
+
+    isChild(): boolean {
+        return this.role === UserRole.CHILD;
+    }
 }

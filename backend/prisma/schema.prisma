@@ -25,6 +25,8 @@ model User {
   password  String
   role      UserRole
 
+  applications Application[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -36,4 +38,26 @@ model ChildRelation {
   createdAt DateTime @default(now())
 
   @@unique([parentId, childId])
+}
+
+enum ApplicationStatus {
+    INSTALLED
+    REMOVED
+}
+
+model Application {
+    id          String  @id
+    childId     String
+    packageName String
+    name        String
+    versionName String
+    versionCode Int
+    status      ApplicationStatus
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+
+    child  User @relation(fields: [childId], references: [id])
+
+    @@unique([childId, packageName])
+    @@index([childId])
 }
