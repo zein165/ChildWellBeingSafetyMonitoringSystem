@@ -1,6 +1,7 @@
 import {
     ApplicationStatus,
 } from '../../domain/application.entity';
+import { ApplicationDetail } from '../../domain/application-detail.entity';
 
 export interface SyncApplicationInput {
     childId: string;
@@ -23,6 +24,7 @@ export interface SyncApplicationOutput {
         versionName: string;
         versionCode: number;
         status: ApplicationStatus;
+        detail: ApplicationDetail | null;
         createdAt: Date;
         updatedAt: Date;
     }[];

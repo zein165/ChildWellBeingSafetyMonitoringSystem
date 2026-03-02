@@ -8,11 +8,16 @@ import {
 
 import type { UserRepository } from '../../auth/domain/user.repository';
 import type { ApplicationRepository } from '../domain/application.repository';
+import type { ApplicationDetailRepository } from '../domain/application-detail.repository';
 
 import { Application } from '../domain/application.entity';
 import { DomainError } from '../../common/errors/domain.error';
 import { UserErrorCode } from '../../auth/domain/user-error-code.enum';
 import { ApplicationErrorCode } from '../domain/application-error-code.enum';
+import {
+    ApplicationDetailInput,
+    ApplicationDetailOutput,
+} from './dto/application-detail.dto';
 
 @Injectable()
 export class ApplicationInventoryUseCase {
@@ -22,6 +27,9 @@ export class ApplicationInventoryUseCase {
 
         @Inject('ApplicationRepository')
         private readonly applicationRepository: ApplicationRepository,
+
+        @Inject('ApplicationDetailRepository')
+        private readonly applicationDetailRepository: ApplicationDetailRepository,
 
         @Inject('IdGenerator')
         private readonly idGenerator: IdGenerator,
@@ -56,23 +64,62 @@ export class ApplicationInventoryUseCase {
                 app.versionName,
                 app.versionCode,
                 app.status,
-            ),
+                null
+            )
         );
 
         const result = await this.applicationRepository.saveMany(apps);
+        const enriched = await Promise.all(
+            result.map(async (app) => {
+                let detail = null;
+
+                try {
+                    detail =
+                        await this.applicationDetailRepository.getByPackageName(
+                            app.getPackageName(),
+                        );
+                } catch (_) {}
+
+                return {
+                    id: app.getId(),
+                    childId: app.getChildId(),
+                    packageName: app.getPackageName(),
+                    name: app.getName(),
+                    versionName: app.getVersionName(),
+                    versionCode: app.getVersionCode(),
+                    status: app.getStatus(),
+                    detail,
+                    createdAt: app.getCreatedAt()!,
+                    updatedAt: app.getUpdatedAt()!,
+                };
+            }),
+        );
+
         return {
             childId: input.childId,
-            applications: result.map((item) => ({
-                id: item.getId(),
-                childId: item.getChildId(),
-                packageName: item.getPackageName(),
-                name: item.getName(),
-                versionName: item.getVersionName(),
-                versionCode: item.getVersionCode(),
-                status: item.getStatus(),
-                createdAt: item.getCreatedAt()!,
-                updatedAt: item.getUpdatedAt()!,
-            })),
+            applications: enriched,
         };
+    }
+
+    async getApplicationDetailByPackageName(input: ApplicationDetailInput): Promise<ApplicationDetailOutput> {
+        try {
+            const detail = await this.applicationDetailRepository.getByPackageName(
+                input.packageName,
+            );
+            return {
+                packageName: detail.getPackageName(),
+                title: detail.getTitle(),
+                description: detail.getDescription(),
+                developer: detail.getDeveloper(),
+                genre: detail.getGenre(),
+                categories: detail.getCategories(),
+            };
+        } catch(error: any) {
+            if (error.status === 404) {
+                throw new DomainError(ApplicationErrorCode.APPLICATION_DETAIL_NOT_FOUND, 'Application not found');
+            }
+
+            throw error;
+        }
     }
 }

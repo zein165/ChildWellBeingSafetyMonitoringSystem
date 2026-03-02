@@ -1,4 +1,5 @@
 import {ApplicationStatus} from "../../enums/application-inventory/application-status.enum";
+import {ApplicationCategory} from "../../enums/application-inventory/application-category.enum";
 
 export interface SyncApplicationRequest {
     childId: string;
@@ -19,6 +20,14 @@ export interface SyncApplicationResponse {
         versionName: string;
         versionCode: number;
         status: ApplicationStatus;
+        detail: {
+            packageName: string;
+            title: string;
+            description: string;
+            developer: string;
+            genre: string;
+            categories: ApplicationCategory[];
+        };
         createdAt: Date;
         updatedAt: Date;
     }

@@ -4,6 +4,9 @@ import { PrismaApplicationRepository } from './infrastructure/persistence/prisma
 import { UuidIdGenerator } from '../common/infrastructure/security/uuid-id.generator';
 import { ApplicationInventoryHandler } from './infrastructure/http/application-inventory.handler';
 import { PrismaUserRepository } from '../auth/infrastructure/persistence/prisma-user.repository';
+import {
+    GooglePlayScraperApplicationDetailRepository
+} from './infrastructure/persistence/google-play-scraper-application-detail.repository';
 
 @Module({
     providers: [
@@ -15,6 +18,10 @@ import { PrismaUserRepository } from '../auth/infrastructure/persistence/prisma-
         {
             provide: 'ApplicationRepository',
             useClass: PrismaApplicationRepository,
+        },
+        {
+            provide: 'ApplicationDetailRepository',
+            useClass: GooglePlayScraperApplicationDetailRepository
         },
         {
             provide: 'IdGenerator',
