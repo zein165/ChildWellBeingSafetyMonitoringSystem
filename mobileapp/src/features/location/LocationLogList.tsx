@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LocationLog = {
   latitude: number;
   longitude: number;
   accuracy: number;
-  timestamp: string;
+  timestamp: string | number;
 };
 
 const STORAGE_KEY = '@location_logs';
@@ -17,7 +17,9 @@ export const LocationLogList = () => {
   useEffect(() => {
     const load = async () => {
       const data = await AsyncStorage.getItem(STORAGE_KEY);
-      if (!data) return;
+      if (!data) {
+        return;
+      }
 
       const parsed = JSON.parse(data);
       const normalized = parsed
@@ -29,8 +31,7 @@ export const LocationLogList = () => {
         }))
         .filter(
           (i: LocationLog) =>
-            typeof i.latitude === 'number' &&
-            typeof i.longitude === 'number',
+            typeof i.latitude === 'number' && typeof i.longitude === 'number',
         );
 
       setLogs(normalized);
@@ -41,33 +42,26 @@ export const LocationLogList = () => {
 
   return (
     <View style={styles.box}>
-      <FlatList
-        data={logs}
-        keyExtractor={(_, i) => i.toString()}
-        nestedScrollEnabled   // ✅ PENTING
-        showsVerticalScrollIndicator
-        renderItem={({item}) => (
-          <View style={styles.item}>
+      <ScrollView nestedScrollEnabled={true}>
+        {logs.map((item, index) => (
+          <View key={index} style={styles.item}>
             <Text style={styles.text}>
-              Lat: {item.latitude.toFixed(5)}, Lng:{' '}
-              {item.longitude.toFixed(5)}
+              Lat: {item.latitude.toFixed(5)}, Lng: {item.longitude.toFixed(5)}
             </Text>
-            <Text style={styles.text}>
-              Accuracy: {item.accuracy} m
-            </Text>
+            <Text style={styles.text}>Accuracy: {item.accuracy} m</Text>
             <Text style={styles.time}>
               {new Date(item.timestamp).toLocaleTimeString()}
             </Text>
           </View>
-        )}
-      />
+        ))}
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   box: {
-    height: 120,              // 🔥 INI KUNCINYA
+    height: 120, // 🔥 INI KUNCINYA
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
