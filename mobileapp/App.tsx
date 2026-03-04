@@ -1,4 +1,4 @@
-﻿import React, {useState} from 'react';
+﻿import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,32 +7,18 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, UrlTile} from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /* ====== IMPORT FEATURE ====== */
 import {LocationTracker} from './src/features/location/LocationTracker';
 import {LocationLogList} from './src/features/location/LocationLogList';
 
-/* ====== MOCK STATE (SESUAI STRUKTUR LAMA) ====== */
-const digital = {
-  screenTimeHours: 5.2,
-};
-
-const inventory = {
-  deviceCount: 3,
-};
-
-const timeline = {
-  sleepHours: 6.5,
-};
-
-const rules = {
-  activeRules: 2,
-};
-
-const location = {
-  outsideDurationMinutes: 45,
-};
+/* ====== MOCK STATE ====== */
+const digital = { screenTimeHours: 5.2 };
+const inventory = { deviceCount: 3 };
+const timeline = { sleepHours: 6.5 };
+const rules = { activeRules: 2 };
 
 const latestPoint = {
   latitude: -6.200000,
@@ -41,6 +27,36 @@ const latestPoint = {
 
 export default function App() {
   const [showLogs, setShowLogs] = useState(false);
+  
+  // State baru buat nampung durasi asli lo
+  const [outsideDuration, setOutsideDuration] = useState(0);
+
+  // Fungsi buat narik data dari mesin Geofence lo
+  useEffect(() => {
+    const fetchDuration = async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const storageKey = `@geofence_log_${today}`;
+        const data = await AsyncStorage.getItem(storageKey);
+        
+        if (data) {
+          const parsed = JSON.parse(data);
+          // Ubah detik jadi menit (dibagi 60) biar enak dibaca
+          const durationInMinutes = Math.floor(parsed.OutsideDurationSeconds / 60);
+          setOutsideDuration(durationInMinutes);
+        }
+      } catch (error) {
+        console.error("Gagal narik durasi:", error);
+      }
+    };
+
+    // Panggil saat aplikasi baru dibuka
+    fetchDuration();
+
+    // Bikin interval biar layarnya update otomatis tiap 1 menit
+    const interval = setInterval(fetchDuration, 60000); 
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,14 +74,16 @@ export default function App() {
           <Text>Registered Devices: {inventory.deviceCount}</Text>
         </View>
 
-        {/* ===== 3. LOCATION ===== */}
+        {/* ===== 3. LOCATION & STORY C2 LO ===== */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>3) Location & Outside Activity</Text>
           <Text>
-            Outside duration: {location.outsideDurationMinutes} min/day
+            {/* INI DIA ANGKANYA UDAH JADI ASLI */}
+            Outside duration: {outsideDuration} min/day
           </Text>
 
           <View style={styles.mapWrap}>
+            {/* Map-nya udah sekalian gue rapihin ke OSM biar jalanannya nampil */}
             <MapView
               style={styles.map}
               initialRegion={{
@@ -73,7 +91,15 @@ export default function App() {
                 longitude: latestPoint.longitude,
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.01,
-              }}>
+              }}
+              provider={undefined} 
+              mapType="none"
+            >
+              <UrlTile
+                urlTemplate="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                maximumZ={19}
+                flipY={false}
+              />
               <Marker
                 coordinate={{
                   latitude: latestPoint.latitude,
@@ -142,5 +168,6 @@ const styles = StyleSheet.create({
   toggle: {
     color: 'blue',
     marginTop: 10,
+    marginBottom: 10,
   },
 });
