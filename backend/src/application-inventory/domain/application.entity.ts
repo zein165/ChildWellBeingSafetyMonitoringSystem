@@ -26,7 +26,7 @@ export class Application {
         private readonly versionName: string,
         private readonly versionCode: number,
         private readonly status: ApplicationStatus,
-        private readonly detail: ApplicationDetail | null,
+        private detail: ApplicationDetail | null,
         private createdAt?: Date,
         private updatedAt?: Date,
     ) {}
@@ -97,5 +97,9 @@ export class Application {
 
     getUpdatedAt(): Date | undefined {
         return this.updatedAt;
+    }
+
+    setDetail(detail: ApplicationDetail | null): void {
+        this.detail = detail;
     }
 }

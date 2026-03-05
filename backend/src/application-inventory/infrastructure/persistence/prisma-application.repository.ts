@@ -7,6 +7,13 @@ import { PrismaService } from '../../../prisma/prisma.service';
 export class PrismaApplicationRepository implements ApplicationRepository {
     constructor(private readonly prisma: PrismaService) {}
 
+    async getByChildId(id: string): Promise<Application[]> {
+        const applications = await this.prisma.application.findMany({
+            where: { childId: id }
+        });
+        return applications.map(app => Application.fromPersistence(app));
+    }
+
     async saveMany(applications: Application[]): Promise<Application[]> {
         return this.prisma.$transaction(
             applications.map(app =>

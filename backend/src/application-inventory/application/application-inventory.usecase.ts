@@ -18,6 +18,10 @@ import {
     ApplicationDetailInput,
     ApplicationDetailOutput,
 } from './dto/application-detail.dto';
+import {
+    GetChildApplicationsInput,
+    GetChildApplicationsOutput,
+} from './dto/get-child-application.dto';
 
 @Injectable()
 export class ApplicationInventoryUseCase {
@@ -35,24 +39,68 @@ export class ApplicationInventoryUseCase {
         private readonly idGenerator: IdGenerator,
     ) {}
 
-    async syncApplication(input: SyncApplicationInput): Promise<SyncApplicationOutput> {
-        if(!input.applications || input.applications.length === 0) {
-            throw new DomainError(
-                ApplicationErrorCode.APPLICATIONS_ARRAY_EMPTY,
-                'Applications array cannot be empty'
-            )
-        }
+    private async enrichApplications(
+        apps: Application[],
+    ): Promise<Application[]> {
+        await Promise.all(
+            apps.map(async (app) => {
+                try {
+                    const detail =
+                        await this.applicationDetailRepository.getByPackageName(
+                            app.getPackageName(),
+                        );
 
+                    app.setDetail(detail);
+                } catch (_) {}
+            }),
+        );
+
+        return apps;
+    }
+
+    async getChildApplications(
+        input: GetChildApplicationsInput,
+    ): Promise<GetChildApplicationsOutput> {
         const child = await this.userRepository.findById(input.childId);
-        if(!child || !child.isChild()) {
+        if (!child || !child.isChild()) {
             throw new DomainError(
                 UserErrorCode.INVALID_CHILD,
                 `Child with id ${input.childId} is invalid.`,
             );
         }
 
-        const filteredApplications = input.applications.filter((app, index, self) =>
-            index === self.findIndex(a => a.packageName === app.packageName)
+        const applications = await this.applicationRepository.getByChildId(
+            input.childId,
+        );
+        const enriched = await this.enrichApplications(applications);
+        return {
+            childId: input.childId,
+            applications: enriched,
+        };
+    }
+
+    async syncApplication(
+        input: SyncApplicationInput,
+    ): Promise<SyncApplicationOutput> {
+        if (!input.applications || input.applications.length === 0) {
+            throw new DomainError(
+                ApplicationErrorCode.APPLICATIONS_ARRAY_EMPTY,
+                'Applications array cannot be empty',
+            );
+        }
+
+        const child = await this.userRepository.findById(input.childId);
+        if (!child || !child.isChild()) {
+            throw new DomainError(
+                UserErrorCode.INVALID_CHILD,
+                `Child with id ${input.childId} is invalid.`,
+            );
+        }
+
+        const filteredApplications = input.applications.filter(
+            (app, index, self) =>
+                index ===
+                self.findIndex((a) => a.packageName === app.packageName),
         );
 
         const apps: Application[] = filteredApplications.map((app) =>
@@ -64,48 +112,38 @@ export class ApplicationInventoryUseCase {
                 app.versionName,
                 app.versionCode,
                 app.status,
-                null
-            )
+                null,
+            ),
         );
 
         const result = await this.applicationRepository.saveMany(apps);
-        const enriched = await Promise.all(
-            result.map(async (app) => {
-                let detail = null;
-
-                try {
-                    detail =
-                        await this.applicationDetailRepository.getByPackageName(
-                            app.getPackageName(),
-                        );
-                } catch (_) {}
-
-                return {
-                    id: app.getId(),
-                    childId: app.getChildId(),
-                    packageName: app.getPackageName(),
-                    name: app.getName(),
-                    versionName: app.getVersionName(),
-                    versionCode: app.getVersionCode(),
-                    status: app.getStatus(),
-                    detail,
-                    createdAt: app.getCreatedAt()!,
-                    updatedAt: app.getUpdatedAt()!,
-                };
-            }),
-        );
+        const enriched = await this.enrichApplications(result);
 
         return {
             childId: input.childId,
-            applications: enriched,
+            applications: enriched.map((app) => ({
+                id: app.getId(),
+                childId: app.getChildId(),
+                packageName: app.getPackageName(),
+                name: app.getName(),
+                versionName: app.getVersionName(),
+                versionCode: app.getVersionCode(),
+                status: app.getStatus(),
+                detail: app.getDetail(),
+                createdAt: app.getCreatedAt()!,
+                updatedAt: app.getUpdatedAt()!,
+            })),
         };
     }
 
-    async getApplicationDetailByPackageName(input: ApplicationDetailInput): Promise<ApplicationDetailOutput> {
+    async getApplicationDetailByPackageName(
+        input: ApplicationDetailInput,
+    ): Promise<ApplicationDetailOutput> {
         try {
-            const detail = await this.applicationDetailRepository.getByPackageName(
-                input.packageName,
-            );
+            const detail =
+                await this.applicationDetailRepository.getByPackageName(
+                    input.packageName,
+                );
             return {
                 packageName: detail.getPackageName(),
                 title: detail.getTitle(),
@@ -114,9 +152,12 @@ export class ApplicationInventoryUseCase {
                 genre: detail.getGenre(),
                 categories: detail.getCategories(),
             };
-        } catch(error: any) {
+        } catch (error: any) {
             if (error.status === 404) {
-                throw new DomainError(ApplicationErrorCode.APPLICATION_DETAIL_NOT_FOUND, 'Application not found');
+                throw new DomainError(
+                    ApplicationErrorCode.APPLICATION_DETAIL_NOT_FOUND,
+                    'Application not found',
+                );
             }
 
             throw error;
