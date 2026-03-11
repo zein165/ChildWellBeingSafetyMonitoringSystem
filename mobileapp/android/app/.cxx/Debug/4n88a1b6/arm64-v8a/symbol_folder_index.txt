@@ -1,0 +1,1 @@
+C:\Users\affan\ChildWellBeingSafetyMonitoringSystem\mobileapp\android\app\build\intermediates\cxx\Debug\4n88a1b6\obj\arm64-v8a

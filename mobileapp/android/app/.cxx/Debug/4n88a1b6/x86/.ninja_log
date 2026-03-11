@@ -1,0 +1,17 @@
+# ninja log v5
+3	28	0	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/x86/CMakeFiles/cmake.verify_globs	4716e16e0575d487
+26	3587	7937115000195918	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/States.cpp.o	dcffe16d16abc58
+19	3995	7937115004028473	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/EventEmitters.cpp.o	3dd1444e6dfd9d2b
+33	4541	7937115009765652	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/ShadowNodes.cpp.o	2f538f4ee2c9ad03
+12	4674	7937115011106350	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/ComponentDescriptors.cpp.o	97a2bb9e5f253bb
+41	4718	7937115011498250	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/rnasyncstorageJSI-generated.cpp.o	f4f738e6ec249e73
+60	4835	7937115012688951	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/rnasyncstorage-generated.cpp.o	22b530593e4a42e9
+7	4852	7937115012878986	CMakeFiles/appmodules.dir/b6caf71e1d640e62ebb013c75676d099/mobileapp/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	6cb1c013c051e278
+50	4906	7937115013445826	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/Props.cpp.o	5168e83e4e33bfa2
+1	5338	7937115017466786	CMakeFiles/appmodules.dir/OnLoad.cpp.o	c8a33211c476ed35
+5338	5452	7937115018895102	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/build/intermediates/cxx/Debug/4n88a1b6/obj/x86/libappmodules.so	1b496b81ceb0e1bc
+5	45	0	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/x86/CMakeFiles/cmake.verify_globs	4716e16e0575d487
+5	42	0	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/x86/CMakeFiles/cmake.verify_globs	4716e16e0575d487
+2	27	0	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/x86/CMakeFiles/cmake.verify_globs	4716e16e0575d487
+2	29	0	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/x86/CMakeFiles/cmake.verify_globs	4716e16e0575d487
+2	25	0	C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/x86/CMakeFiles/cmake.verify_globs	4716e16e0575d487
