@@ -14,3 +14,13 @@ export class RegisterParentRequest {
     @IsEnum(UserRole)
     role: UserRole;
 }
+
+export class RegisterChildRequest {
+    @IsString()
+    parentId: string;
+
+    @IsString()
+    @MinLength(3)
+    @MaxLength(20)
+    username: string;
+}
