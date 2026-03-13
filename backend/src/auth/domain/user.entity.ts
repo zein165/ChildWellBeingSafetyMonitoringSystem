@@ -6,6 +6,7 @@ export interface UserPersistence {
     username: string;
     password: string;
     role: string;
+    parentId?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -21,6 +22,7 @@ export class User {
         private readonly username: string,
         private readonly password: string,
         private readonly role: UserRole,
+        private readonly parentId?: string,
         private createdAt?: Date,
         private updatedAt?: Date,
     ) {}
@@ -34,12 +36,37 @@ export class User {
         return new User(id, username, passwordHash, UserRole.PARENT);
     }
 
+    static createChild(
+        id: string,
+        username: string,
+        pinHash: string,
+        parentId: string,
+    ): User {
+        this.validateUsername(username);
+
+        if (!parentId) {
+            throw new DomainError(
+                UserErrorCode.INVALID_PARENT,
+                'Child must belong to a parent',
+            );
+        }
+
+        return new User(
+            id,
+            username,
+            pinHash,
+            UserRole.CHILD,
+            parentId,
+        )
+    }
+
     static fromPersistence(raw: UserPersistence): User {
         return new User(
             raw.id,
             raw.username,
             raw.password,
             raw.role as UserRole,
+            raw.parentId,
             raw.createdAt,
             raw.updatedAt,
         );
@@ -70,7 +97,26 @@ export class User {
         return this.role;
     }
 
+    getParentId(): string | undefined {
+        return this.parentId;
+    }
+
+    getParentIdOrThrow(): string {
+        if (!this.parentId) {
+            throw new DomainError(
+                UserErrorCode.INVALID_PARENT,
+                'ParentId not found',
+            );
+        }
+
+        return this.parentId;
+    }
+
     isChild(): boolean {
         return this.role === UserRole.CHILD;
+    }
+
+    isParent(): boolean {
+        return this.role === UserRole.PARENT;
     }
 }
