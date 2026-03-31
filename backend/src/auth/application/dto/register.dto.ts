@@ -3,7 +3,6 @@ import { User, UserRole } from 'src/auth/domain/user.entity';
 export class RegisterParentInput {
     username: string;
     password: string;
-    role: UserRole;
 }
 
 export class RegisterUserOutput {

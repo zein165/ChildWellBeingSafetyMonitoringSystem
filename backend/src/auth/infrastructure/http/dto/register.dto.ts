@@ -10,7 +10,4 @@ export class RegisterParentRequest {
     @IsString()
     @MinLength(8)
     password: string;
-
-    @IsEnum(UserRole)
-    role: UserRole;
 }
