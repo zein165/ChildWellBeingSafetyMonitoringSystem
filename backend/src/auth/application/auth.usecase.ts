@@ -6,6 +6,7 @@ import type { UserRepository } from "../domain/user.repository";
 
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { RegisterParentInput, RegisterUserOutput } from './dto/register.dto';
+import { RegisterChildInput, RegisterChildOutput } from './dto/register.dto';
 
 import type { IdGenerator } from '../../common/interfaces/id-generator.interface';
 import type { TokenService } from './token-service.interface';
@@ -54,6 +55,47 @@ export class AuthUsecase {
         return RegisterUserOutput.create(newUser);
     }
 
+    async registerChild(
+        input: RegisterChildInput,
+    ): Promise<RegisterChildOutput> {
+        const parentUser = await this.userRepository.findById(input.parentId);
+        if (!parentUser) {
+            throw new DomainError(
+                UserErrorCode.INVALID_PARENT,
+                'Parent user not found',
+            );
+        }
+
+        if (!parentUser.isParent()) {
+            throw new DomainError(
+                UserErrorCode.UNAUTHORIZED,
+                'Only parent can create child accounts'
+            );
+        }
+
+        const existingChild = await this.userRepository.findByUsername(input.username);
+        if (existingChild) {
+            throw new DomainError(
+                UserErrorCode.USERNAME_ALREADY_TAKEN,
+                'Username already exist',
+            );
+        }
+
+        const plainPin = this.generateRandomPin();
+        const hashedPin = await this.passwordHasher.hash(plainPin);
+
+        const childUser = User.createChild(
+            uuidv4(),
+            input.username,
+            hashedPin,
+            parentUser.getId(),
+        )
+
+        const newChild = await this.userRepository.create(childUser);
+
+        return RegisterChildOutput.create(newChild, plainPin);
+    }
+
     async login(input: LoginInput): Promise<LoginOutput> {
         const user = await this.userRepository.findByUsername(input.username);
         if (!user)
@@ -87,5 +129,13 @@ export class AuthUsecase {
                 role: user.getRole(),
             },
         );
+    }
+
+    private generateRandomPin(length = 6): string {
+        let pin = '';
+        for (let i = 0; i < length; i++) {
+            pin += Math.floor(Math.random() * 10);
+        }
+        return pin;
     }
 }

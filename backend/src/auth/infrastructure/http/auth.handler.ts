@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthUsecase } from 'src/auth/application/auth.usecase';
-import { RegisterParentRequest } from './dto/register.dto';
+import { RegisterParentRequest, RegisterChildRequest } from './dto/register.dto';
 import { ApiResponse } from '../../../common/http/response.helper';
 import { LoginRequest } from './dto/login.dto';
 
@@ -12,6 +12,12 @@ export class AuthHandler {
     async registerParent(@Body() body: RegisterParentRequest) {
         const user = await this.authService.registerParent(body);
         return ApiResponse.success('A new parent successfully created', user);
+    }
+
+    @Post('register/child')
+    async registerChild(@Body() body: RegisterChildRequest) {
+        const user = await this.authService.registerChild(body);
+        return ApiResponse.success('A new child successfully created', user);
     }
 
     @Post('login')
