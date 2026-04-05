@@ -14,6 +14,7 @@ import type { PasswordHasher } from './password-hasher.interface';
 
 import { UserErrorCode } from '../domain/user-error-code.enum';
 import { DomainError } from '../../common/errors/domain.error';
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class AuthUsecase {
@@ -29,6 +30,8 @@ export class AuthUsecase {
 
         @Inject('TokenService')
         private readonly tokenService: TokenService,
+
+        private readonly prisma: PrismaService
     ) {}
 
     async registerParent(
@@ -84,14 +87,24 @@ export class AuthUsecase {
         const plainPin = this.generateRandomPin();
         const hashedPin = await this.passwordHasher.hash(plainPin);
 
+        const childId = uuidv4()
+
         const childUser = User.createChild(
-            uuidv4(),
+            childId,
             input.username,
             hashedPin,
             parentUser.getId(),
         )
 
         const newChild = await this.userRepository.create(childUser);
+
+        await this.prisma.childRelation.create({
+            data: {
+                id: uuidv4(),
+                parentId: parentUser.getId(),
+                childId: childId,
+            }
+        })
 
         return RegisterChildOutput.create(newChild, plainPin);
     }
