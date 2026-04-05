@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import HomeScreen from '../../features/home/screens/HomeScreen.tsx';
+import BottomTabNavigator from './BottomTabNavigator.tsx';
 
 import { AppParamList } from './types.ts';
 
@@ -8,8 +8,9 @@ const Stack = createNativeStackNavigator<AppParamList>();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
+      {/* <Stack.Screen name="Settings" component={SettingsScreen} /> */}
     </Stack.Navigator>
   );
 }
