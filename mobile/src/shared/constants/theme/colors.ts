@@ -1,3 +1,5 @@
+import { purple100 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
+
 export const colors = {
   primary: '#2B7FFF',
   primaryText: '#FFFFFF',
@@ -11,6 +13,7 @@ export const colors = {
   surface: '#FFFFFF',
 
   border: '#C1D0E6',
+  shadow: '#B1CCE7',
 
   textHeading: '#0F172A',
   textBody: '#62748E',
@@ -58,4 +61,12 @@ export const colors = {
   buttonSecondary: '#2B7FFF',
 
   transparent: 'transparent',
+
+  //data color
+  grey: '#F1F5F9',
+  pink: '#F6339A',
+  blue: '#335FFF',
+  red: '#FF0000',
+  green: '#32D851',
+  purple: '#6366F1'
 };
