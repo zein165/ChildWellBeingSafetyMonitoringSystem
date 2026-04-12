@@ -120,4 +120,14 @@ export class TrackingUseCase {
             locationUpdated: hasLocationChanged
         };
     }
+
+    async getLocationHistory(childId: string, date: Date) {
+        const locations = await this.locationRepository.findByDate(childId, date);
+        return locations.map(loc => ({
+            id: loc.getId(),
+            latitude: loc.getLatitude(),
+            longitude: loc.getLongitude(),
+            createdAt: loc.getCreatedAt()
+        }));
+    }
 }

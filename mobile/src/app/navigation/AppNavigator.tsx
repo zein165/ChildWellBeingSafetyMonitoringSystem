@@ -7,6 +7,7 @@ import Header from '../../shared/components/layout/screens/Header.tsx';
 import BottomNavbar from '../../shared/components/layout/screens/BottomNavbar.tsx';
 
 import HomeScreen from '../../features/home/screens/HomeScreen.tsx';
+import { LocationScreen } from '../../features/location/screens/LocationScreen.tsx';
 import ApplicationInventoryScreen from '../../features/application-inventory/screens/ApplicationInventoryScreen.tsx';
 
 import { AppParamList } from './types.ts';
@@ -28,7 +29,7 @@ export default function AppNavigator() {
       tabBar={props => <BottomNavbar {...props} />}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Location" component={DummyScreen} />
+      <Tab.Screen name="Location" component={LocationScreen} />
       <Tab.Screen name="Applications" component={ApplicationInventoryScreen} />
       <Tab.Screen name="Activity" component={DummyScreen} />
       <Tab.Screen name="Rule" component={DummyScreen} />

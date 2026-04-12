@@ -30,4 +30,25 @@ export class PrismaLocationRepository implements LocationRepository {
 
         return Location.fromPersistence(lastLocation as any);
     }
+
+    async findByDate(childId: string, date: Date): Promise<Location[]> {
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const locations = await this.prisma.location.findMany({
+            where: {
+                childId,
+                createdAt: {
+                    gte: startOfDay,
+                    lte: endOfDay,
+                },
+            },
+            orderBy: { createdAt: 'asc' },
+        });
+
+        return locations.map((loc) => Location.fromPersistence(loc as any));
+    }
 }
