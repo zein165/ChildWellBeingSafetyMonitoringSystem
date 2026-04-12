@@ -5,8 +5,6 @@ export interface ApplicationPersistence {
     childId: string;
     packageName: string;
     name: string;
-    versionName: string;
-    versionCode: number;
     status: string;
     createdAt: Date;
     updatedAt: Date;
@@ -23,22 +21,18 @@ export class Application {
         private readonly childId: string,
         private readonly packageName: string,
         private readonly name: string,
-        private readonly versionName: string,
-        private readonly versionCode: number,
         private readonly status: ApplicationStatus,
         private detail: ApplicationDetail | null,
         private createdAt?: Date,
         private updatedAt?: Date,
     ) {}
 
-    static create(id: string, childId: string, packageName: string, name: string, versionName: string, versionCode: number, status: ApplicationStatus, detail: ApplicationDetail | null): Application {
+    static create(id: string, childId: string, packageName: string, name: string, status: ApplicationStatus, detail: ApplicationDetail | null): Application {
         return new Application(
             id,
             childId,
             packageName,
             name,
-            versionName,
-            versionCode,
             status,
             detail,
         );
@@ -50,8 +44,6 @@ export class Application {
             persistence.childId,
             persistence.packageName,
             persistence.name,
-            persistence.versionName,
-            persistence.versionCode,
             persistence.status as ApplicationStatus,
             null,
             persistence.createdAt,
@@ -73,14 +65,6 @@ export class Application {
 
     getName(): string {
         return this.name;
-    }
-
-    getVersionName(): string {
-        return this.versionName;
-    }
-
-    getVersionCode(): number {
-        return this.versionCode;
     }
 
     getStatus(): ApplicationStatus {

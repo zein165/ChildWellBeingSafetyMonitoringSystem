@@ -8,6 +8,7 @@ import { typography } from '../../constants/theme/typography.ts';
 
 type Props = {
   variant: 'flat' | 'outlined';
+  value?: string;
   placeholder?: string;
   disabled?: boolean;
   style?: StyleProp<TextStyle>;
@@ -21,6 +22,7 @@ type Props = {
 
 export default function TextInput({
   variant,
+  value,
   placeholder,
   disabled = false,
   style,
@@ -34,6 +36,7 @@ export default function TextInput({
   return (
     <PaperTextInput
       mode={variant}
+      value={value}
       placeholder={placeholder}
       placeholderTextColor={colors.inputPlaceholder}
       disabled={disabled}

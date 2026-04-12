@@ -84,8 +84,7 @@ export class AuthUsecase {
             );
         }
 
-        const plainPin = this.generateRandomPin();
-        const hashedPin = await this.passwordHasher.hash(plainPin);
+        const hashedPin = await this.passwordHasher.hash(input.pin);
 
         const childId = uuidv4()
 
@@ -106,7 +105,7 @@ export class AuthUsecase {
             }
         })
 
-        return RegisterChildOutput.create(newChild, plainPin);
+        return RegisterChildOutput.create(newChild);
     }
 
     async login(input: LoginInput): Promise<LoginOutput> {
@@ -142,13 +141,5 @@ export class AuthUsecase {
                 role: user.getRole(),
             },
         );
-    }
-
-    private generateRandomPin(length = 6): string {
-        let pin = '';
-        for (let i = 0; i < length; i++) {
-            pin += Math.floor(Math.random() * 10);
-        }
-        return pin;
     }
 }

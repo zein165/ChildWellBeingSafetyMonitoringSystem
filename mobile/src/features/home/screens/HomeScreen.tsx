@@ -18,155 +18,152 @@ export default function HomeScreen() {
   const { WEEKLY_DATA, TOP_APPS, totalScreenTime } = useHomeData()
 
   return (
-    <SafeAreaView 
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: colors.background
       }}
     >
-      <Header
-        onSettingsPress={() => console.log('Settings pressed')}
-      />
-
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={{ gap: spacing.lg }}
-        showsVerticalScrollIndicator={false} 
-        showsHorizontalScrollIndicator={false} 
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
       >
-        <View 
+        <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
             paddingTop: spacing.md
-        }}>
-          <View 
-            style={{ 
-              gap: spacing.lg, 
-              paddingHorizontal: spacing.lg
           }}>
-            <Card 
-              variant="default" 
-              padding={16} 
-              borderRadius={12} 
+          <View
+            style={{
+              gap: spacing.lg,
+              paddingHorizontal: spacing.lg
+            }}>
+            <Card
+              variant="default"
+              padding={16}
+              borderRadius={12}
               style={{ flex: 1 }}
             >
-              <View 
-                style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                gap: spacing.xs, 
-                marginBottom: 16 
-              }}>
-                <IconButton 
-                  icon="clock-outline" 
-                  size={20} 
-                  style={{ margin: 0, padding: 0 }} 
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: spacing.xs,
+                  marginBottom: 16
+                }}>
+                <IconButton
+                  icon="clock-outline"
+                  size={20}
+                  style={{ margin: 0, padding: 0 }}
                   iconColor={colors.textBody} />
-                <Text 
-                  size="sm" 
-                  color={colors.textBody} 
+                <Text
+                  size="sm"
+                  color={colors.textBody}
                   variant="bold">Screen Time</Text>
               </View>
 
-              <View 
-                style={{ 
-                flexDirection: 'row', 
-                alignItems: 'baseline', 
-                gap: 4 
-              }}>
-                <Text 
-                  size="displayLg" 
-                  variant="bold" 
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'baseline',
+                  gap: 4
+                }}>
+                <Text
+                  size="displayLg"
+                  variant="bold"
                   color={colors.textHeading}>
-                    4
+                  4
                 </Text>
-                <Text 
-                  size="md" 
+                <Text
+                  size="md"
                   color={colors.textBody}>
-                    h
+                  h
                 </Text>
-                <Text 
-                  size="displayLg" 
-                  variant="bold" 
+                <Text
+                  size="displayLg"
+                  variant="bold"
                   color={colors.textHeading}>
-                    12
+                  12
                 </Text>
-                <Text 
-                  size="md" 
+                <Text
+                  size="md"
                   color={colors.textBody}>
-                    m
+                  m
                 </Text>
               </View>
 
-              <View 
-                style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                marginBottom: 12 
-              }}>
-                <IconButton 
-                  icon="arrow-bottom-right" 
-                  size={16} 
-                  iconColor={colors.successText} 
-                  style={{ margin: 0, width: 20 }} 
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 12
+                }}>
+                <IconButton
+                  icon="arrow-bottom-right"
+                  size={16}
+                  iconColor={colors.successText}
+                  style={{ margin: 0, width: 20 }}
                 />
-                <Text 
-                  size="sm" 
-                  color={colors.successText} 
+                <Text
+                  size="sm"
+                  color={colors.successText}
                   variant="regular">
-                    15% less than yesterday    
+                  15% less than yesterday
                 </Text>
               </View>
 
-              <View 
-                style={{ 
-                flexDirection: 'row', 
-                justifyContent: 'space-between', 
-                alignItems: 'flex-end', 
-                height: 100 
-              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-end',
+                  height: 100
+                }}>
                 {WEEKLY_DATA.map((item) => (
-                  <View 
-                    key={item.day} 
-                    style={{ alignItems: 'center', gap: spacing.sm 
-                  }}>
-                    <View 
-                      style={{ 
-                        width: 36, 
-                        height: item.value, 
+                  <View
+                    key={item.day}
+                    style={{
+                      alignItems: 'center', gap: spacing.sm
+                    }}>
+                    <View
+                      style={{
+                        width: 36,
+                        height: item.value,
                         backgroundColor: item.active ? colors.purple : colors.grey,
                         borderRadius: 10
-                    }}/>
-                    <Text size="xs" 
+                      }} />
+                    <Text size="xs"
                       color={colors.textBody}>
-                        {item.day}
+                      {item.day}
                     </Text>
                   </View>
                 ))}
               </View>
             </Card>
 
-            <Card 
-              variant="default" 
-              padding={16} 
-              borderRadius={12} 
+            <Card
+              variant="default"
+              padding={16}
+              borderRadius={12}
               style={{ flex: 1 }}
             >
-              <View style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                gap: 8, 
-                marginBottom: 16 
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 16
               }}>
-                <IconButton 
-                  icon="view-grid-outline" 
-                  size={20} style={{ margin: 0 }} 
-                  iconColor={colors.textBody} 
+                <IconButton
+                  icon="view-grid-outline"
+                  size={20} style={{ margin: 0 }}
+                  iconColor={colors.textBody}
                 />
-                <Text 
-                  size="sm" 
-                  color={colors.textBody} 
+                <Text
+                  size="sm"
+                  color={colors.textBody}
                   variant="bold"
                 >
                   Usage Classification
@@ -224,7 +221,7 @@ export default function HomeScreen() {
                 {TOP_APPS.map((app) => (
                   <View key={app.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
                     <Image source={{ uri: app.icon }} style={{ width: 48, height: 48, borderRadius: 12 }} />
-                    
+
                     <View style={{ flex: 1, gap: 8 }}>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text size="md" variant="bold" color={colors.textHeading}>{app.name}</Text>

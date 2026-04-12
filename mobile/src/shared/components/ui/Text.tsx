@@ -1,4 +1,4 @@
-import { Text as RNText } from 'react-native';
+import { Text as RNText, StyleProp, TextStyle } from 'react-native';
 
 import { typography } from '../../constants/theme/typography';
 import { colors } from '../../constants/theme/colors';
@@ -26,6 +26,7 @@ type Props = {
     | 'displayMd'
     | 'displayLg';
   color?: string;
+  style?: StyleProp<TextStyle>;
   children: React.ReactNode;
 };
 
@@ -65,6 +66,7 @@ export default function Text({
   lineHeight,
   color,
   children,
+  style,
 }: Props) {
   return (
     <RNText
@@ -73,6 +75,7 @@ export default function Text({
         fontSize: fontSizeMap[size || 'md'],
         lineHeight: lineHeightMap[lineHeight || size || 'md'],
         color: color || colors.primary,
+        ...style,
       }}
     >
       {children}

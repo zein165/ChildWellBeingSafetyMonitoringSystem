@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ApplicationRepository } from '../../domain/application.repository';
-import { Application } from '../../domain/application.entity';
+import { Application, ApplicationStatus } from '../../domain/application.entity';
+import { ApplicationUsage } from '../../domain/application-usage.entity';
 import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
@@ -11,7 +12,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         const applications = await this.prisma.application.findMany({
             where: { childId: id }
         });
-        return applications.map(app => Application.fromPersistence(app));
+        return applications.map(app => Application.fromPersistence(app as any));
     }
 
     async saveMany(applications: Application[]): Promise<Application[]> {
@@ -29,20 +30,89 @@ export class PrismaApplicationRepository implements ApplicationRepository {
                         childId: app.getChildId(),
                         packageName: app.getPackageName(),
                         name: app.getName(),
-                        versionName: app.getVersionName(),
-                        versionCode: app.getVersionCode(),
-                        status: app.getStatus(),
+                        status: app.getStatus() as any,
                     },
                     update: {
                         name: app.getName(),
-                        versionName: app.getVersionName(),
-                        versionCode: app.getVersionCode(),
-                        status: app.getStatus(),
+                        status: app.getStatus() as any,
                     },
                 })
             )
         ).then(results =>
-            results.map(app => Application.fromPersistence(app))
+            results.map(app => Application.fromPersistence(app as any))
+        );
+    }
+
+    async syncApplications(childId: string, applications: Application[]): Promise<Application[]> {
+        const packageNames = applications.map(app => app.getPackageName());
+
+        return this.prisma.$transaction(async (tx) => {
+            // Upsert reported apps
+            const upsertPromises = applications.map(app =>
+                tx.application.upsert({
+                    where: {
+                        childId_packageName: {
+                            childId: childId,
+                            packageName: app.getPackageName(),
+                        },
+                    },
+                    create: {
+                        id: app.getId(),
+                        childId: childId,
+                        packageName: app.getPackageName(),
+                        name: app.getName(),
+                        status: ApplicationStatus.INSTALLED,
+                    },
+                    update: {
+                        name: app.getName(),
+                        status: ApplicationStatus.INSTALLED,
+                    },
+                })
+            );
+
+            // Mark missing apps as REMOVED
+            const removePromise = tx.application.updateMany({
+                where: {
+                    childId: childId,
+                    packageName: { notIn: packageNames },
+                    status: ApplicationStatus.INSTALLED
+                },
+                data: {
+                    status: ApplicationStatus.REMOVED
+                }
+            });
+
+            await Promise.all([...upsertPromises, removePromise]);
+
+            const allApps = await tx.application.findMany({
+                where: { childId }
+            });
+
+            return allApps.map(app => Application.fromPersistence(app as any));
+        });
+    }
+
+    async saveUsage(usages: ApplicationUsage[]): Promise<void> {
+        await this.prisma.$transaction(
+            usages.map(usage =>
+                this.prisma.applicationUsage.upsert({
+                    where: {
+                        applicationId_date: {
+                            applicationId: usage.getApplicationId(),
+                            date: usage.getDate(),
+                        },
+                    },
+                    create: {
+                        id: usage.getId(),
+                        applicationId: usage.getApplicationId(),
+                        date: usage.getDate(),
+                        duration: usage.getDuration(),
+                    },
+                    update: {
+                        duration: usage.getDuration(),
+                    },
+                })
+            )
         );
     }
 }

@@ -24,6 +24,7 @@ export class RegisterUserOutput {
 export class RegisterChildInput {
     parentId: string;
     username: string;
+    pin: string;
 }
 
 export class RegisterChildOutput {
@@ -31,29 +32,25 @@ export class RegisterChildOutput {
     username: string;
     role: UserRole;
     parentId: string;
-    plainPin: string;
 
     private constructor(
         id: string,
         username: string,
         role: UserRole,
         parentId: string,
-        plainPin: string,
     ) {
         this.id = id;
         this.username = username;
         this.role = role;
         this.parentId = parentId;
-        this.plainPin = plainPin;
     }
 
-    static create(user: User, plainPin: string): RegisterChildOutput {
+    static create(user: User): RegisterChildOutput {
         return new RegisterChildOutput(
             user.getId(),
             user.getUsername(),
             user.getRole(),
             user.getParentId()!,
-            plainPin,
         );
     }
 }

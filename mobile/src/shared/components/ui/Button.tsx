@@ -31,7 +31,12 @@ export default function Button({
   return (
     <PaperButton
       mode={variant}
-      textColor={textColor || colors.surface}
+      textColor={
+        textColor ||
+        (variant === 'contained' || variant === 'elevated'
+          ? colors.surface
+          : colors.primary)
+      }
       {...(variant === 'contained' || variant === 'elevated'
         ? { buttonColor: color || colors.primary }
         : {})}

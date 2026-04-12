@@ -8,8 +8,6 @@ export interface SyncApplicationInput {
     applications: {
         packageName: string;
         name: string;
-        versionName: string;
-        versionCode: number;
         status: ApplicationStatus;
     }[];
 }
@@ -21,8 +19,6 @@ export interface SyncApplicationOutput {
         childId: string;
         packageName: string;
         name: string;
-        versionName: string;
-        versionCode: number;
         status: ApplicationStatus;
         detail: ApplicationDetail | null;
         createdAt: Date;

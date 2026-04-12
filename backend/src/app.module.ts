@@ -6,6 +6,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ApplicationInventoryModule } from './application-inventory/application-inventory.module';
 import { DevicesModule } from './devices/devices.module';
+import { ChildrenModule } from './children/children.module';
+import { TrackingModule } from './tracking/tracking.module';
 
 @Module({
     imports: [
@@ -16,7 +18,9 @@ import { DevicesModule } from './devices/devices.module';
         PrismaModule,
         AuthModule,
         ApplicationInventoryModule,
-        DevicesModule
+        DevicesModule,
+        ChildrenModule,
+        TrackingModule
     ],
     controllers: [AppController],
     providers: [AppService],

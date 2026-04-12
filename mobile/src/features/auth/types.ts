@@ -15,3 +15,9 @@ export interface RegisterParentRequest {
   username: string;
   password: string;
 }
+
+export interface RegisterChildRequest {
+  parentId: string;
+  username: string;
+  pin: string;
+}

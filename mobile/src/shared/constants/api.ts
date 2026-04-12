@@ -9,8 +9,12 @@ export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER_PARENT: '/auth/register/parent',
+    REGISTER_CHILD: '/auth/register/child',
   },
   DEVICE: {
-    GET_CHILDREN: '/devices'
-  }
+    GET_CHILDREN: '/devices',
+  },
+  CHILDREN: {
+    GET_BY_PARENT: '/children',
+  },
 }

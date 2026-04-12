@@ -26,6 +26,7 @@ model User {
   role      UserRole
 
   applications Application[]
+  locations    Location[]
 
   children ChildRelation[] @relation("ParentChildren")
   parent   ChildRelation?  @relation("ChildParent")
@@ -57,14 +58,41 @@ model Application {
     childId     String
     packageName String
     name        String
-    versionName String
-    versionCode Int
     status      ApplicationStatus
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
+    
+    usages      ApplicationUsage[]
 
     child  User @relation(fields: [childId], references: [id])
 
     @@unique([childId, packageName])
     @@index([childId])
+}
+
+model ApplicationUsage {
+    id            String   @id
+    applicationId String
+    date          DateTime
+    duration      BigInt   // duration in milliseconds
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+    @@unique([applicationId, date])
+    @@index([applicationId])
+}
+
+model Location {
+    id        String   @id
+    childId   String
+    latitude  Float
+    longitude Float
+    createdAt DateTime @default(now())
+
+    child User @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+    @@index([childId])
+    @@index([createdAt])
 }

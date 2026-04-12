@@ -3,17 +3,12 @@ export type AuthParamList = {
   Register: undefined;
 }
 
-export type BottomTabParamList = {
+export type AppParamList = {
   Home: undefined;
   Location: undefined;
   Applications: undefined;
   Activity: undefined;
   Rule: undefined;
-};
-
-export type AppParamList = {
-  MainTabs: undefined;
-  // Settings: undefined;
 }
 
-export type RootParamList = AuthParamList & BottomTabParamList & AppParamList
+export type RootParamList = AuthParamList & AppParamList

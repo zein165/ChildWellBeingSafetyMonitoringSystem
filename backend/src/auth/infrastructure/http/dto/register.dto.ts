@@ -1,5 +1,4 @@
-import { IsEnum, IsString, MinLength, MaxLength } from 'class-validator';
-import { User, UserRole } from 'src/auth/domain/user.entity';
+import { IsString, MinLength, MaxLength } from 'class-validator';
 
 export class RegisterParentRequest {
     @IsString()
@@ -20,4 +19,8 @@ export class RegisterChildRequest {
     @MinLength(3)
     @MaxLength(20)
     username: string;
+
+    @IsString()
+    @MinLength(4)
+    pin: string;
 }
