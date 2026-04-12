@@ -1,7 +1,7 @@
 import {
     ApplicationStatus,
 } from '../../domain/application.entity';
-import { ApplicationDetail } from '../../domain/application-detail.entity';
+import { ApplicationDTO } from './get-child-application.dto';
 
 export interface SyncApplicationInput {
     childId: string;
@@ -14,14 +14,5 @@ export interface SyncApplicationInput {
 
 export interface SyncApplicationOutput {
     childId: string;
-    applications: {
-        id: string;
-        childId: string;
-        packageName: string;
-        name: string;
-        status: ApplicationStatus;
-        detail: ApplicationDetail | null;
-        createdAt: Date;
-        updatedAt: Date;
-    }[];
+    applications: ApplicationDTO[];
 }

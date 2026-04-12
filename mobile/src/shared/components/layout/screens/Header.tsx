@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { View, Pressable, Alert } from 'react-native';
+import { View, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors } from '../../../constants/theme/colors';
 import { spacing } from '../../../constants/theme/spacing';
 
 import { useChildrenStore } from '../../../../store/childrenStore';
 import { useUserStore } from '../../../../store/userStore';
+import { useSnackbarStore } from '../../../../store/ui/snackbarStore';
+
 import { authService } from '../../../../features/auth/services/authService';
 
 import IconButton from '../../ui/IconButton';
@@ -15,7 +18,6 @@ import ChildDropdown from '../../ui/ChildDropdown';
 import Modal from '../../ui/Modal';
 import TextInput from '../../ui/TextInput';
 import Button from '../../ui/Button';
-import { useSnackbarStore } from '../../../../store/ui/snackbarStore';
 
 type Props = {
   onSettingsPress?: () => void;
@@ -45,14 +47,12 @@ export default function Header({ onSettingsPress }: Props) {
   }
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: spacing.md,
-        paddingTop: spacing.sm,
-        paddingBottom: spacing.md,
         backgroundColor: colors.backgroundWhite,
       }}
     >
@@ -71,7 +71,7 @@ export default function Header({ onSettingsPress }: Props) {
           }}
         >
           <Icon
-            name="account-circle-outline"
+            name="cellphone"
             color={hasChildren ? colors.icon : colors.textBody}
             size={24}
           />
@@ -180,6 +180,6 @@ export default function Header({ onSettingsPress }: Props) {
           />
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }

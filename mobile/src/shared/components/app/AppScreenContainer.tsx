@@ -1,5 +1,4 @@
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
 import { colors } from '../../constants/theme/colors';
 import { spacing } from '../../constants/theme/spacing';
@@ -18,7 +17,7 @@ export default function AppScreenContainer({ children }: Props) {
   const { activeChild, loading } = useChildrenStore();
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: colors.background,
@@ -26,17 +25,24 @@ export default function AppScreenContainer({ children }: Props) {
         paddingHorizontal: spacing.lg,
       }}
     >
-      {loading ? <ActivityIndicator toggle={loading} /> : activeChild ? (
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1, gap: spacing.lg }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          {children}
-        </ScrollView>
+      {loading ? (
+        <ActivityIndicator toggle={loading} />
+      ) : activeChild ? (
+        <View style={{ flex: 1 }}>{children}</View>
       ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xl }}>
-          <Icon name="account-search-outline" size={64} color={colors.textBody} />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: spacing.xl,
+          }}
+        >
+          <Icon
+            name="account-search-outline"
+            size={64}
+            color={colors.textBody}
+          />
           <View style={{ marginTop: spacing.md, alignItems: 'center' }}>
             <Text size="lg" variant="bold" color={colors.textHeading}>
               No Child Account Selected
@@ -49,6 +55,6 @@ export default function AppScreenContainer({ children }: Props) {
           </View>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 }

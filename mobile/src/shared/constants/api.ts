@@ -17,4 +17,7 @@ export const API_ENDPOINTS = {
   CHILDREN: {
     GET_BY_PARENT: '/children',
   },
-}
+  APPLICATIONS: {
+    GET_BY_CHILD: '/applications',
+  },
+};

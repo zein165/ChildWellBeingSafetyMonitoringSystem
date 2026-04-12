@@ -8,19 +8,15 @@ import {
 
 import type { UserRepository } from '../../auth/domain/user.repository';
 import type { ApplicationRepository } from '../domain/application.repository';
-import type { ApplicationDetailRepository } from '../domain/application-detail.repository';
 
 import { Application } from '../domain/application.entity';
 import { DomainError } from '../../common/errors/domain.error';
 import { UserErrorCode } from '../../auth/domain/user-error-code.enum';
 import { ApplicationErrorCode } from '../domain/application-error-code.enum';
 import {
-    ApplicationDetailInput,
-    ApplicationDetailOutput,
-} from './dto/application-detail.dto';
-import {
     GetChildApplicationsInput,
     GetChildApplicationsOutput,
+    ApplicationDTO,
 } from './dto/get-child-application.dto';
 
 @Injectable()
@@ -32,30 +28,20 @@ export class ApplicationInventoryUseCase {
         @Inject('ApplicationRepository')
         private readonly applicationRepository: ApplicationRepository,
 
-        @Inject('ApplicationDetailRepository')
-        private readonly applicationDetailRepository: ApplicationDetailRepository,
-
         @Inject('IdGenerator')
         private readonly idGenerator: IdGenerator,
     ) {}
 
-    private async enrichApplications(
-        apps: Application[],
-    ): Promise<Application[]> {
-        await Promise.all(
-            apps.map(async (app) => {
-                try {
-                    const detail =
-                        await this.applicationDetailRepository.getByPackageName(
-                            app.getPackageName(),
-                        );
-
-                    app.setDetail(detail);
-                } catch (_) {}
-            }),
-        );
-
-        return apps;
+    private mapToDTO(app: Application): ApplicationDTO {
+        return {
+            id: app.getId(),
+            childId: app.getChildId(),
+            packageName: app.getPackageName(),
+            name: app.getName(),
+            status: app.getStatus(),
+            createdAt: app.getCreatedAt()!,
+            updatedAt: app.getUpdatedAt()!,
+        };
     }
 
     async getChildApplications(
@@ -72,10 +58,10 @@ export class ApplicationInventoryUseCase {
         const applications = await this.applicationRepository.getByChildId(
             input.childId,
         );
-        const enriched = await this.enrichApplications(applications);
+        
         return {
             childId: input.childId,
-            applications: enriched,
+            applications: applications.map(app => this.mapToDTO(app)),
         };
     }
 
@@ -110,53 +96,14 @@ export class ApplicationInventoryUseCase {
                 app.packageName,
                 app.name,
                 app.status,
-                null,
             ),
         );
 
         const result = await this.applicationRepository.saveMany(apps);
-        const enriched = await this.enrichApplications(result);
 
         return {
             childId: input.childId,
-            applications: enriched.map((app) => ({
-                id: app.getId(),
-                childId: app.getChildId(),
-                packageName: app.getPackageName(),
-                name: app.getName(),
-                status: app.getStatus(),
-                detail: app.getDetail(),
-                createdAt: app.getCreatedAt()!,
-                updatedAt: app.getUpdatedAt()!,
-            })),
+            applications: result.map((app) => this.mapToDTO(app)),
         };
-    }
-
-    async getApplicationDetailByPackageName(
-        input: ApplicationDetailInput,
-    ): Promise<ApplicationDetailOutput> {
-        try {
-            const detail =
-                await this.applicationDetailRepository.getByPackageName(
-                    input.packageName,
-                );
-            return {
-                packageName: detail.getPackageName(),
-                title: detail.getTitle(),
-                description: detail.getDescription(),
-                developer: detail.getDeveloper(),
-                genre: detail.getGenre(),
-                categories: detail.getCategories(),
-            };
-        } catch (error: any) {
-            if (error.status === 404) {
-                throw new DomainError(
-                    ApplicationErrorCode.APPLICATION_DETAIL_NOT_FOUND,
-                    'Application not found',
-                );
-            }
-
-            throw error;
-        }
     }
 }

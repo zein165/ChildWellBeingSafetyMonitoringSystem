@@ -47,7 +47,6 @@ export class TrackingUseCase {
                 app.packageName,
                 app.appName,
                 ApplicationStatus.INSTALLED,
-                null
             )
         );
 

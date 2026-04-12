@@ -1,5 +1,3 @@
-import { ApplicationDetail } from './application-detail.entity';
-
 export interface ApplicationPersistence {
     id: string;
     childId: string;
@@ -22,19 +20,17 @@ export class Application {
         private readonly packageName: string,
         private readonly name: string,
         private readonly status: ApplicationStatus,
-        private detail: ApplicationDetail | null,
         private createdAt?: Date,
         private updatedAt?: Date,
     ) {}
 
-    static create(id: string, childId: string, packageName: string, name: string, status: ApplicationStatus, detail: ApplicationDetail | null): Application {
+    static create(id: string, childId: string, packageName: string, name: string, status: ApplicationStatus): Application {
         return new Application(
             id,
             childId,
             packageName,
             name,
             status,
-            detail,
         );
     }
 
@@ -45,7 +41,6 @@ export class Application {
             persistence.packageName,
             persistence.name,
             persistence.status as ApplicationStatus,
-            null,
             persistence.createdAt,
             persistence.updatedAt,
         )
@@ -71,19 +66,11 @@ export class Application {
         return this.status;
     }
 
-    getDetail(): ApplicationDetail | null {
-        return this.detail;
-    }
-
     getCreatedAt(): Date | undefined {
         return this.createdAt;
     }
 
     getUpdatedAt(): Date | undefined {
         return this.updatedAt;
-    }
-
-    setDetail(detail: ApplicationDetail | null): void {
-        this.detail = detail;
     }
 }
