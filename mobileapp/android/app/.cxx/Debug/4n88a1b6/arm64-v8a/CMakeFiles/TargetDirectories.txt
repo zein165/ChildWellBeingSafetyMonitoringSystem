@@ -1,0 +1,6 @@
+C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/arm64-v8a/CMakeFiles/appmodules.dir
+C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/arm64-v8a/rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir
+C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/arm64-v8a/rnasyncstorage_autolinked_build/CMakeFiles/edit_cache.dir
+C:/Users/affan/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4n88a1b6/arm64-v8a/rnasyncstorage_autolinked_build/CMakeFiles/rebuild_cache.dir
