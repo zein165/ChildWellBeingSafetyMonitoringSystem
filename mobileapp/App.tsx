@@ -1,5 +1,5 @@
-﻿import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+﻿import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native';
 import TimelineScreen from './src/screens/TimelineScreen';
 import ActiveProtectionScreen from './src/screens/ActiveProtectionScreen';
 
@@ -8,6 +8,19 @@ import { LocationTracker } from './src/features/location/LocationTracker';
 
 export default function App() {
   const [role, setRole] = useState<'parent' | 'child' | null>(null);
+  
+  // STATE BARU: Untuk mengontrol Splash Screen
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+
+  // EFEK BARU: Menghilangkan Splash Screen setelah 2.5 detik
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsSplashVisible(false);
+    }, 2500); 
+    
+    // Membersihkan memori jika komponen di-unmount
+    return () => clearTimeout(timer);
+  }, []);
 
   // Fungsi untuk kembali ke layar awal
   const handleGoBack = () => setRole(null);
@@ -17,12 +30,40 @@ export default function App() {
       {/* 🚀 MESIN JALAN OTOMATIS DI BACKGROUND SEJAK APLIKASI DIBUKA */}
       <LocationTracker />
 
-      {/* Tampilan Layar Sesuai Pilihan */}
-      {role === 'parent' ? (
+      {/* KONDISI 1: TAMPILKAN SPLASH SCREEN */}
+      {isSplashVisible ? (
+        <SafeAreaView style={styles.splashContainer}>
+          <StatusBar barStyle="dark-content" backgroundColor="#F4F7FB" />
+          
+          <View style={styles.splashContent}>
+            <View style={styles.logoWrapper}>
+              <View style={styles.splashLogoCircle}>
+                <Text style={styles.splashEmoji}>🛡️</Text>
+              </View>
+            </View>
+            <Text style={styles.appTitle}>FamilyGuard</Text>
+            <Text style={styles.splashSubtitle}>Perlindungan Pintar untuk Keluarga</Text>
+          </View>
+
+          <View style={styles.splashFooter}>
+            <ActivityIndicator size="large" color="#4361EE" />
+            <Text style={styles.splashLoadingText}>Memulai sistem keamanan...</Text>
+          </View>
+        </SafeAreaView>
+      ) : 
+
+      /* KONDISI 2: TAMPILKAN LAYAR ORANG TUA */
+      role === 'parent' ? (
         <TimelineScreen goBack={handleGoBack} />
-      ) : role === 'child' ? (
+      ) : 
+      
+      /* KONDISI 3: TAMPILKAN LAYAR ANAK */
+      role === 'child' ? (
         <ActiveProtectionScreen goBack={handleGoBack} />
-      ) : (
+      ) : 
+      
+      /* KONDISI 4: TAMPILKAN MENU PILIHAN PERAN (LOGIN) */
+      (
         <SafeAreaView style={styles.container}>
           <StatusBar barStyle="dark-content" backgroundColor="#F4F7FB" />
           
@@ -94,7 +135,51 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   
-  // Header Styles
+  // --- SPLASH SCREEN STYLES ---
+  splashContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#F4F7FB',
+  },
+  splashContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  splashLogoCircle: {
+    width: 120,
+    height: 120,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#E2E8F0',
+  },
+  splashEmoji: {
+    fontSize: 60,
+  },
+  splashSubtitle: {
+    fontSize: 16,
+    color: '#64748B',
+    fontWeight: '500',
+    marginTop: 5,
+  },
+  splashFooter: {
+    marginBottom: 50,
+    alignItems: 'center',
+  },
+  splashLoadingText: {
+    marginTop: 15,
+    fontSize: 14,
+    color: '#94A3B8',
+    fontWeight: '500',
+    letterSpacing: 0.5,
+  },
+
+  // --- LOGIN HEADER STYLES ---
   headerContainer: {
     paddingHorizontal: 30,
     paddingTop: 60,
@@ -136,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 
-  // Cards Styles
+  // --- LOGIN CARDS STYLES ---
   cardsContainer: {
     paddingHorizontal: 20,
     marginTop: 10,
@@ -213,7 +298,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // Footer Styles
+  // --- FOOTER STYLES ---
   footer: {
     paddingBottom: 30,
     alignItems: 'center',
