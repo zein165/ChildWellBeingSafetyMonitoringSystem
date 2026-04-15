@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert, FlatList, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert, FlatList, TextInput, SafeAreaView } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { ref as dbRef, onValue, set } from 'firebase/database';
@@ -7,6 +7,9 @@ import { db } from '../firebaseConfig';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 
 import { AppEvent, logEvent } from '../utils/EventLogger';
+
+// IMPORT LAYAR APLIKASI YANG BARU KITA BUAT
+import InstalledAppsScreen from './InstalledAppsScreen';
 
 function getDistanceInMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371e3; 
@@ -20,12 +23,15 @@ function getDistanceInMeters(lat1: number, lon1: number, lat2: number, lon2: num
 }
 
 export default function TimelineScreen({ goBack }: { goBack: () => void }) {
+  // STATE BARU: Untuk ngontrol kapan layar aplikasi muncul
+  const [showAppsList, setShowAppsList] = useState(false);
+
   const [childData, setChildData] = useState({ name: 'Anakku', latitude: -6.2, longitude: 106.8, status: 'Menunggu...', lastUpdated: '-' });
   const [homeLocation, setHomeLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [timelineEvents, setTimelineEvents] = useState<AppEvent[]>([]);
   
   const [curfewInput, setCurfewInput] = useState('20:00');
-  const [gameTimeInput, setGameTimeInput] = useState('120'); // D2: Input batas game
+  const [gameTimeInput, setGameTimeInput] = useState('120'); 
 
   const [filterMode, setFilterMode] = useState<'ALL' | 'TODAY' | 'YESTERDAY'>('ALL');
 
@@ -84,7 +90,6 @@ export default function TimelineScreen({ goBack }: { goBack: () => void }) {
     const rulesRef = dbRef(db, 'rules/child1/curfew');
     const unsubRules = onValue(rulesRef, (snapshot) => { if (snapshot.exists()) setCurfewInput(snapshot.val()); });
 
-    // Listener Game Time Limits
     const gameTimeRef = dbRef(db, 'rules/child1/maxGameTime');
     const unsubGameLimit = onValue(gameTimeRef, (snapshot) => { if (snapshot.exists()) setGameTimeInput(String(snapshot.val())); });
 
@@ -165,10 +170,23 @@ export default function TimelineScreen({ goBack }: { goBack: () => void }) {
     );
   };
 
+  // JIKA TOMBOL APLIKASI DIKLIK: Tampilkan Layar InstalledAppsScreen
+  if (showAppsList) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+        <TouchableOpacity style={styles.backToMapBtn} onPress={() => setShowAppsList(false)}>
+          <Text style={styles.backToMapText}>⬅ Kembali ke Peta & Timeline</Text>
+        </TouchableOpacity>
+        <InstalledAppsScreen />
+      </SafeAreaView>
+    );
+  }
+
+  // TAMPILAN DEFAULT: Peta & Timeline
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={goBack}><Text style={styles.backButtonText}>⬅️ Kembali</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.backButton} onPress={goBack}><Text style={styles.backButtonText}>⬅️ Ganti Peran</Text></TouchableOpacity>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10}}>
           <Text style={styles.headerTitle}>Pantau Anak 📡</Text>
           <TouchableOpacity style={styles.setHomeBtn} onPress={setAsHome}><Text style={styles.setHomeText}>🏠 Set Rumah</Text></TouchableOpacity>
@@ -188,6 +206,12 @@ export default function TimelineScreen({ goBack }: { goBack: () => void }) {
           </View>
           <TouchableOpacity style={styles.saveBtn} onPress={saveRules}><Text style={styles.saveBtnText}>Simpan</Text></TouchableOpacity>
         </View>
+
+        {/* TAMBAHAN: TOMBOL PANTAU APLIKASI */}
+        <TouchableOpacity style={styles.monitorAppBtn} onPress={() => setShowAppsList(true)}>
+          <Text style={styles.monitorAppBtnText}>📱 Pantau Aplikasi Anak Terinstal</Text>
+        </TouchableOpacity>
+
       </View>
 
       <View style={styles.mapContainer}>
@@ -239,6 +263,12 @@ const styles = StyleSheet.create({
   saveBtn: { backgroundColor: '#FF9800', paddingHorizontal: 15, paddingVertical: 15, borderRadius: 8, marginLeft: 5 },
   saveBtnText: { color: '#FFF', fontWeight: 'bold', fontSize: 12 },
   
+  // Style Tambahan Tombol Pantau Aplikasi & Tombol Back
+  monitorAppBtn: { backgroundColor: '#0d6efd', padding: 12, borderRadius: 8, marginTop: 10, alignItems: 'center' },
+  monitorAppBtnText: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
+  backToMapBtn: { padding: 15, backgroundColor: '#e9ecef', borderBottomWidth: 1, borderColor: '#dee2e6' },
+  backToMapText: { fontSize: 16, fontWeight: 'bold', color: '#333' },
+
   mapContainer: { height: Dimensions.get('window').height * 0.35, borderBottomWidth: 2, borderColor: '#eee' }, 
   map: { width: '100%', height: '100%' },
   
