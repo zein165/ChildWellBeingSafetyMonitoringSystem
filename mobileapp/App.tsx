@@ -1,36 +1,44 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native';
-import TimelineScreen from './src/screens/TimelineScreen';
+
+// IMPORT LAYAR YANG BENAR
+import ParentDashboard from './src/screens/ParentDashboard';
 import ActiveProtectionScreen from './src/screens/ActiveProtectionScreen';
 
 // Import mesin pelacaknya
 import { LocationTracker } from './src/features/location/LocationTracker';
 
+// 🔥 IMPORT BACKGROUND MONITOR (Sesuaikan path-nya jika beda folder)
+import { startBackgroundMonitor, stopBackgroundMonitor } from './src/services/BackgroundMonitor';
+
 export default function App() {
   const [role, setRole] = useState<'parent' | 'child' | null>(null);
-  
-  // STATE BARU: Untuk mengontrol Splash Screen
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
-  // EFEK BARU: Menghilangkan Splash Screen setelah 2.5 detik
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsSplashVisible(false);
     }, 2500); 
     
-    // Membersihkan memori jika komponen di-unmount
     return () => clearTimeout(timer);
   }, []);
 
-  // Fungsi untuk kembali ke layar awal
-  const handleGoBack = () => setRole(null);
+  // Fungsi saat masuk sebagai Anak (Otomatis nyalakan pemantau)
+  const handleSetRoleChild = async () => {
+    setRole('child');
+    //await startBackgroundMonitor(); 
+  };
+
+  // Fungsi saat kembali ke menu utama (Otomatis matikan pemantau)
+  const handleGoBack = async () => {
+    setRole(null);
+    await stopBackgroundMonitor();
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#F4F7FB' }}>
-      {/* 🚀 MESIN JALAN OTOMATIS DI BACKGROUND SEJAK APLIKASI DIBUKA */}
       <LocationTracker />
 
-      {/* KONDISI 1: TAMPILKAN SPLASH SCREEN */}
       {isSplashVisible ? (
         <SafeAreaView style={styles.splashContainer}>
           <StatusBar barStyle="dark-content" backgroundColor="#F4F7FB" />
@@ -52,22 +60,18 @@ export default function App() {
         </SafeAreaView>
       ) : 
 
-      /* KONDISI 2: TAMPILKAN LAYAR ORANG TUA */
       role === 'parent' ? (
-        <TimelineScreen goBack={handleGoBack} />
+        <ParentDashboard goBackToRoleSelection={handleGoBack} />
       ) : 
       
-      /* KONDISI 3: TAMPILKAN LAYAR ANAK */
       role === 'child' ? (
         <ActiveProtectionScreen goBack={handleGoBack} />
       ) : 
       
-      /* KONDISI 4: TAMPILKAN MENU PILIHAN PERAN (LOGIN) */
       (
         <SafeAreaView style={styles.container}>
           <StatusBar barStyle="dark-content" backgroundColor="#F4F7FB" />
           
-          {/* Bagian Header / Logo */}
           <View style={styles.headerContainer}>
             <View style={styles.logoWrapper}>
               <View style={styles.logoCircle}>
@@ -78,10 +82,7 @@ export default function App() {
             <Text style={styles.appSubtitle}>Pilih peran Anda untuk mulai memantau dan melindungi aktivitas keluarga.</Text>
           </View>
 
-          {/* Bagian Kartu Pilihan Peran */}
           <View style={styles.cardsContainer}>
-            
-            {/* KARTU ORANG TUA */}
             <TouchableOpacity 
               style={[styles.roleCard, styles.parentCard]} 
               activeOpacity={0.8}
@@ -99,11 +100,11 @@ export default function App() {
               </View>
             </TouchableOpacity>
 
-            {/* KARTU ANAK */}
             <TouchableOpacity 
               style={[styles.roleCard, styles.childCard]} 
               activeOpacity={0.8}
-              onPress={() => setRole('child')}
+              // 🔥 PANGGIL FUNGSI YANG SUDAH DIUPDATE
+              onPress={handleSetRoleChild}
             >
               <View style={styles.iconContainerChild}>
                 <Text style={styles.cardEmoji}>👦📱</Text>
@@ -116,10 +117,8 @@ export default function App() {
                 <Text style={styles.arrowText}>➔</Text>
               </View>
             </TouchableOpacity>
-
           </View>
 
-          {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>🔒 Aman • Terenkripsi • Cepat</Text>
           </View>
@@ -134,8 +133,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
-  
-  // --- SPLASH SCREEN STYLES ---
   splashContainer: {
     flex: 1,
     justifyContent: 'space-between',
@@ -178,8 +175,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     letterSpacing: 0.5,
   },
-
-  // --- LOGIN HEADER STYLES ---
   headerContainer: {
     paddingHorizontal: 30,
     paddingTop: 60,
@@ -220,8 +215,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     paddingHorizontal: 10,
   },
-
-  // --- LOGIN CARDS STYLES ---
   cardsContainer: {
     paddingHorizontal: 20,
     marginTop: 10,
@@ -251,7 +244,7 @@ const styles = StyleSheet.create({
   iconContainerParent: {
     width: 60,
     height: 60,
-    backgroundColor: '#E0EAFF', // Biru muda
+    backgroundColor: '#E0EAFF', 
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
@@ -260,7 +253,7 @@ const styles = StyleSheet.create({
   iconContainerChild: {
     width: 60,
     height: 60,
-    backgroundColor: '#DCFCE7', // Hijau muda
+    backgroundColor: '#DCFCE7', 
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
@@ -297,8 +290,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-
-  // --- FOOTER STYLES ---
   footer: {
     paddingBottom: 30,
     alignItems: 'center',

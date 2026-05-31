@@ -75,15 +75,16 @@ export default function TimelineScreen({ goBack }: { goBack: () => void }) {
           const distance = getDistanceInMeters(
             homeRef.current.latitude, homeRef.current.longitude, data.latitude, data.longitude
           );
-          if (distance > 50 && !isOutsideRef.current) {
-            set(dbRef(db, 'rules/child1/isOutsideStatus'), true); 
-            showNotification('🚨 PERINGATAN!', 'Anak telah keluar dari area aman (Rumah)!');
-            logEvent('ALERT', '🚨 Anak keluar dari pagar virtual rumah (>50m)');
-          } else if (distance <= 50 && isOutsideRef.current) {
-            set(dbRef(db, 'rules/child1/isOutsideStatus'), false); 
-            showNotification('✅ INFO AMAN', 'Anak telah kembali ke area Rumah.');
-            logEvent('ALERT', '✅ Anak sudah kembali ke dalam area rumah');
-          }
+         if (distance > 50 && !isOutsideRef.current) {
+  set(dbRef(db, 'rules/child1/isOutsideStatus'), true); 
+  
+  // 🔥 TAMBAHAN: Simpan JAM KELUAR ke Firebase
+  const timeLeft = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  set(dbRef(db, 'rules/child1/lastLeftHomeTime'), timeLeft);
+
+  showNotification('🚨 PERINGATAN!', 'Anak telah keluar dari area aman (Rumah)!');
+  logEvent('ALERT', `🚨 Anak keluar rumah pada jam ${timeLeft}`);
+}
         }
       }
     });
