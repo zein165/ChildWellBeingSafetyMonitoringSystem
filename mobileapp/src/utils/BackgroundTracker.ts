@@ -39,7 +39,7 @@ export const startBackgroundTracking = async () => {
           (error) => console.log('Background GPS Error:', error),
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
-      }, 600000); 
+      }, 100000); 
     });
   });
 

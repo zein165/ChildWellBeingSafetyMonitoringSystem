@@ -10,6 +10,10 @@ buildscript {
         // ⚠️ SAMAKAN VERSI (INI PENTING)
         googlePlayServicesLocationVersion = "21.0.1"
         playServicesLocationVersion = "21.0.1"
+
+        // ✅ TAMBAHAN BARU UNTUK FIX ERROR BACKGROUND ACTIONS (API 34)
+        coreVersion = "1.13.1"
+        androidxCoreVersion = "1.13.1"
     }
     repositories {
         google()
@@ -27,6 +31,9 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             force "com.google.android.gms:play-services-location:21.0.1"
+
+            force "androidx.core:core:1.13.1"
+            force "androidx.core:core-ktx:1.13.1"
         }
     }
 }

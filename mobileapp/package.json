@@ -43,6 +43,7 @@
     "@react-native/eslint-config": "0.76.3",
     "@react-native/metro-config": "0.76.3",
     "@react-native/typescript-config": "^0.76.3",
+    "@types/jest": "^30.0.0",
     "@types/react": "^18.3.28",
     "@types/react-native-maps": "^0.24.1",
     "@types/react-test-renderer": "^18.3.1",

@@ -4,6 +4,7 @@
     "target": "esnext",
     "module": "esnext",
     "jsx": "react-native",
+    "types": ["jest"],
     "strict": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

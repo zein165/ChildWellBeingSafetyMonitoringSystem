@@ -1,0 +1,12 @@
+# ninja log v5
+5	62	0	C:/Users/ASUS/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/.cxx/Debug/4e4p3i5w/x86_64/CMakeFiles/cmake.verify_globs	9bc79c1cac3bc6d9
+32	4075	7984003564457075	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/States.cpp.o	b48cd330c70fbeb6
+23	4421	7984003567701896	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/EventEmitters.cpp.o	1bf3f6e1dcac247b
+55	5450	7984003578275922	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/ShadowNodes.cpp.o	9459c44ce84de41c
+39	5604	7984003579800381	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/29c6ac0a1dd6ebb9204efeee5b088e58/rnasyncstorageJSI-generated.cpp.o	1924648879f02f36
+64	5623	7984003579905427	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/rnasyncstorage-generated.cpp.o	1f0c1d1ad2a58317
+16	5747	7984003581305451	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/ComponentDescriptors.cpp.o	9a91ff5d08dc1709
+47	5758	7984003581385453	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/Props.cpp.o	9b6ef1d5d8f68460
+1	5892	7984003582668505	CMakeFiles/appmodules.dir/a76db7adbab4ad3534d8d66a7ce01c55/mobileapp/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	7f920924153f2661
+8	6314	7984003586921017	CMakeFiles/appmodules.dir/OnLoad.cpp.o	12a302cfcdb3a60e
+6314	6582	7984003589704558	C:/Users/ASUS/ChildWellBeingSafetyMonitoringSystem/mobileapp/android/app/build/intermediates/cxx/Debug/4e4p3i5w/obj/x86_64/libappmodules.so	7f55877a92954f19

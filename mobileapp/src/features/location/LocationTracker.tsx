@@ -72,7 +72,7 @@ export const LocationTracker = () => {
       trackLocation(); // Ambil lokasi pertama kali saat aplikasi dibuka
       
       // Update otomatis setiap 30 detik (30000 milidetik) untuk simulasi real-time
-      intervalId = setInterval(trackLocation, 30000); 
+      intervalId = setInterval(trackLocation, 10000); 
     };
 
     start();
