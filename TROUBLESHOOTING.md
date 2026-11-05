@@ -1,0 +1,1 @@
+Dokumen ini berisi riwayat error yang terjadi selama pengembangan aplikasi dan cara perbaikannya
